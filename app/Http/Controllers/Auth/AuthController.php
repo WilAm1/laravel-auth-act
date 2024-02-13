@@ -204,10 +204,17 @@ class AuthController extends Controller
 
     public function updatePassword(Request $request): RedirectResponse
     {
-        $validated = $request->validateWithBag('updatePassword', [
-            'current_password' => ['required', 'current_password'],
-            'password' => ['required', RulesPassword::defaults(), 'confirmed'],
-        ]);
+        $validated = $request->validateWithBag(
+            'updatePassword',
+            [
+                'current_password' => ['required', 'current_password'],
+                'password' => [
+                    'required', 'confirmed',
+                    'regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/'
+                ],
+            ],
+            ['password.regex' => "The password must contain at least one uppercase letter, one lowercase letter, and one digit"]
+        );
 
         $request->user()->update([
             'password' => Hash::make($validated['password']),

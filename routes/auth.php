@@ -4,7 +4,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
 
-
+// auth routes
 Route::middleware('guest')->group(function () {
     Route::get('register', [AuthController::class, 'registerView'])
         ->name('register');
@@ -15,19 +15,7 @@ Route::middleware('guest')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
 });
 
-
-Route::middleware('guest')->group(function () {
-    Route::get('forgot-password', [AuthController::class, 'passwordResetView'])
-        ->name('password.request');
-    Route::post('forgot-password', [AuthController::class, 'passwordReset'])
-        ->name('password.email');
-
-    Route::get('reset-password/{token}', [AuthController::class, 'newPasswordView'])
-        ->name('password.reset');
-    Route::post('reset-password', [AuthController::class, 'newPassword'])
-        ->name('password.store');
-});
-
+// Verify Email Routes
 Route::middleware('auth')->group(function () {
     Route::get('verify-email', [AuthController::class, 'verifyEmailView'])
         ->name('verification.notice');
@@ -42,6 +30,20 @@ Route::middleware('auth')->group(function () {
 });
 
 
+
+// Password Reset Routes
+Route::middleware('guest')->group(function () {
+    Route::get('forgot-password', [AuthController::class, 'passwordResetView'])
+        ->name('password.request');
+    Route::post('forgot-password', [AuthController::class, 'passwordReset'])
+        ->name('password.email');
+
+    Route::get('reset-password/{token}', [AuthController::class, 'newPasswordView'])
+        ->name('password.reset');
+    Route::post('reset-password', [AuthController::class, 'newPassword'])
+        ->name('password.store');
+});
+// routes that's protected by auth
 Route::middleware('auth')->group(function () {
 
     Route::get('confirm-password', [AuthController::class, 'confirmPassView'])
